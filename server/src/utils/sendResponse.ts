@@ -1,4 +1,4 @@
-import { ResponseStatus, ApiResponse } from "@/@types/apiResponse";
+import { ResponseStatus, ApiResponse } from "@/types/apiResponse";
 import { Response } from "express";
 
 export function sendResponse<T>(
@@ -9,6 +9,7 @@ export function sendResponse<T>(
   httpStatusCode: number = 200,
   meta?: object,
 ) {
+  
   let response: ApiResponse<T>;
 
   if (status === ResponseStatus.Success) {

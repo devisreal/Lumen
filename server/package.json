@@ -11,7 +11,10 @@
     "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
     "lint": "eslint src/**/*.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "db:push": "pnpm exec drizzle-kit push",
+    "db:generate": "pnpm exec drizzle-kit generate",
+    "db:migrate": "pnpm exec drizzle-kit migrate"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -35,6 +38,7 @@
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
     "express": "^5.1.0",
-    "pg": "^8.15.6"
+    "pg": "^8.15.6",
+    "slugify": "^1.6.6"
   }
 }
