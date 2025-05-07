@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { SelectUserModel } from "@/types/schemaTypes";
 import { and, eq as equals, exists } from "drizzle-orm";
 import slugify from "slugify";
 
@@ -30,4 +31,15 @@ export async function checkExistingUser(
     console.error("Error checking existing user:", error);
     throw error;
   }
+}
+
+export async function findUserBySlug(
+  slug: string,
+): Promise<Omit<SelectUserModel, "password"> | null> {
+  const [user] = await db.select().from(users).where(equals(users.slug, slug));
+
+  if (!user) return null;
+
+  const { password, ...result } = user;
+  return result;
 }

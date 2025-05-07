@@ -9,7 +9,6 @@ export function sendResponse<T>(
   httpStatusCode: number = 200,
   meta?: object,
 ) {
-  
   let response: ApiResponse<T>;
 
   if (status === ResponseStatus.Success) {
@@ -25,6 +24,7 @@ export function sendResponse<T>(
     response = {
       status,
       message,
+      data: (data as T) || undefined,
       meta,
     } as ApiResponse<T>;
   }

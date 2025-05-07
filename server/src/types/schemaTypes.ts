@@ -1,4 +1,5 @@
 import { users } from "@/db/schema";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-export type SelectUser = typeof users.$inferSelect;
-export type InsertUser = typeof users.$inferInsert;
+export type SelectUserModel = InferSelectModel<typeof users>;
+export type InsertUserModel = InferInsertModel<typeof users>;

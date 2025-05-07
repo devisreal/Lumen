@@ -1,4 +1,5 @@
 import * as t from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const userRoleEnum = t.pgEnum("user_role", [
   "user",
@@ -28,3 +29,6 @@ export const users = t.pgTable(
     t.uniqueIndex("created_idx").on(table.created_at),
   ],
 );
+
+export const userSelectSchema = createSelectSchema(users);
+export const userInsertSchema = createInsertSchema(users);
