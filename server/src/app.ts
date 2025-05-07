@@ -1,10 +1,10 @@
-import express, { Express, Request, Response } from "express";
+import userRoutes from "@/routes/users.routes";
 import cors from "cors";
 import "dotenv/config";
+import express, { Express, Request, Response } from "express";
 import { errorHandler } from "@/middlewares/errorHandler.middleware";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
-import userRoutes from "@/routes/users.routes";
 
 const app: Express = express();
 

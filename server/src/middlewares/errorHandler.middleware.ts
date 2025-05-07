@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
+import { NextFunction, Request, Response } from "express";
 
 export interface AppError extends Error {
   status?: number;

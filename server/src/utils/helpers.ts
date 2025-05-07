@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { users } from "@/db/schema";
-import { SelectUserModel } from "@/types/schemaTypes";
 import { and, eq as equals, exists } from "drizzle-orm";
 import slugify from "slugify";
+import { users } from "@/db/schema";
+import { SelectUserModel } from "@/types/schemaTypes";
 
 export function generateSlug(text: string): string {
   return (

@@ -1,3 +1,4 @@
+import express, { Router } from "express";
 import {
   createUser,
   getAllUsers,
@@ -6,7 +7,6 @@ import {
 import authorise from "@/middlewares/auth.middleware";
 import { checkRoles } from "@/middlewares/checkRole.middleware";
 import { UserRoles } from "@/types/roles";
-import express, { Router } from "express";
 
 const router: Router = express.Router();
 

@@ -17,6 +17,7 @@
     "db:migrate": "pnpm exec drizzle-kit migrate"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.1",

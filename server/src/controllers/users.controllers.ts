@@ -1,16 +1,16 @@
-import { Request, Response } from "express";
-import "dotenv/config";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { sendResponse } from "@/utils/sendResponse";
-import { checkExistingUser, generateSlug } from "@/utils/helpers";
 import { db } from "@/db";
-import { userInsertSchema, users } from "@/db/schema";
-import { ResponseStatus } from "@/types/apiResponse";
-import { UserRoles } from "@/types/roles";
-import { SelectUserModel, InsertUserModel } from "@/types/schemaTypes";
-import { JwtPayload } from "@/types/auth";
+import bcrypt from "bcryptjs";
+import "dotenv/config";
 import { eq as equals } from "drizzle-orm";
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { userInsertSchema, users } from "@/db/schema";
+import { checkExistingUser, generateSlug } from "@/utils/helpers";
+import { sendResponse } from "@/utils/sendResponse";
+import { ResponseStatus } from "@/types/apiResponse";
+import { JwtPayload } from "@/types/auth";
+import { UserRoles } from "@/types/roles";
+import { InsertUserModel, SelectUserModel } from "@/types/schemaTypes";
 
 export const getAllUsers = async (_req: Request, res: Response) => {
   const result: SelectUserModel[] = await db.select().from(users);
