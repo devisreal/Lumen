@@ -3,12 +3,27 @@ import {
   getAllUsers,
   getUser,
 } from "@/controllers/users.controllers";
-import express, { Router, Application } from "express";
+import authorise from "@/middlewares/auth.middleware";
+import { checkRoles } from "@/middlewares/checkRole.middleware";
+import { UserRoles } from "@/types/roles";
+import express, { Router } from "express";
 
 const router: Router = express.Router();
 
-router.get("/", getAllUsers as Application);
-router.get("/:slug", getUser as Application);
-router.post("/register", createUser as Application);
+router.get("/", getAllUsers);
+router.post("/register", createUser);
+
+router.get(
+  "/validate",
+  authorise,
+  checkRoles(UserRoles.User, UserRoles.Admin),
+  async (req, res) => {
+    // const test = req.token;
+    res.json({ isValid: true });
+    return;
+  },
+);
+
+router.get("/:slug", getUser);
 
 export default router;

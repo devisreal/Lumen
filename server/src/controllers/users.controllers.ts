@@ -28,22 +28,13 @@ export const getUser = async (req: Request, res: Response) => {
     const { password, ...result } = user;
 
     if (!result) {
-      res.json({
-        message: "User not found",
-      });
-      return;
+      sendResponse(res, ResponseStatus.Error, "User not found", null, 400);
     }
 
     sendResponse(res, ResponseStatus.Success, "Success", result);
   } catch (error) {
     console.log(error);
-    return sendResponse(
-      res,
-      ResponseStatus.Error,
-      "An error occured",
-      error,
-      500,
-    );
+    sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
   }
 };
 
@@ -59,7 +50,7 @@ export const createUser = async (req: Request, res: Response) => {
     );
 
     if (userExists) {
-      return sendResponse(
+      sendResponse(
         res,
         ResponseStatus.Error,
         "User with this username or email already exists.",
@@ -77,7 +68,7 @@ export const createUser = async (req: Request, res: Response) => {
     });
     if (!parsedData.success) {
       console.log(parsedData.error.errors);
-      return sendResponse(
+      sendResponse(
         res,
         ResponseStatus.Error,
         "Fill in all required fields",
@@ -103,26 +94,21 @@ export const createUser = async (req: Request, res: Response) => {
     const [insertedUser] = await db.insert(users).values(user).returning();
 
     if (!insertedUser) {
-      return sendResponse(
-        res,
-        ResponseStatus.Fail,
-        "User insert failed",
-        null,
-        500,
-      );
+      sendResponse(res, ResponseStatus.Fail, "User insert failed", null, 500);
     }
 
     const payload: JwtPayload = {
       id: insertedUser.id,
       email: insertedUser.email,
       slug: insertedUser.slug,
+      role: insertedUser.role,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
       expiresIn: "8h",
     });
 
-    return sendResponse(
+    sendResponse(
       res,
       ResponseStatus.Success,
       "Account created successfully!, login to continue",
@@ -133,12 +119,6 @@ export const createUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
 
-    return sendResponse(
-      res,
-      ResponseStatus.Error,
-      "An error occured",
-      error,
-      500,
-    );
+    sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
   }
 };

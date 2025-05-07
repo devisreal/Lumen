@@ -1,5 +1,7 @@
 export enum UserRoles {
   Admin = "admin",
   User = "user",
-  Guest = "guest",
+  Moderator = "moderator",
 }
+
+export type UserRole = keyof typeof UserRoles | `${UserRoles}`;

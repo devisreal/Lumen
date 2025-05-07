@@ -6,4 +6,5 @@ export const db = drizzle({
   connection: process.env.DATABASE_URL as string,
   casing: "snake_case",
   schema: schema,
-});1
+});
+1;

@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
-import { errorHandler } from "@/middlewares/errorHandler";
+import { errorHandler } from "@/middlewares/errorHandler.middleware";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
 import userRoutes from "@/routes/users.routes";
