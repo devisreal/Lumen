@@ -5,6 +5,7 @@
   "importOrder": [
     "^@/db/(.*)$",
     "^@/db/",
+    "^@/routes/(.*)$",
     "^@/controllers/(.*)$",
     "^@/middlewares/(.*)$",
     "^@/utils/(.*)$",

@@ -1,7 +1,8 @@
-import userRoutes from "@/routes/users.routes";
 import cors from "cors";
 import "dotenv/config";
 import express, { Express, Request, Response } from "express";
+import authRoutes from "@/routes/auth.routes";
+import userRoutes from "@/routes/users.routes";
 import { errorHandler } from "@/middlewares/errorHandler.middleware";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
@@ -20,6 +21,7 @@ app.get("/", async (_req: Request, res: Response) => {
 });
 
 // * routes
+app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 
 // * middlewares
