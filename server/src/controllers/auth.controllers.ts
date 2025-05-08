@@ -1,7 +1,6 @@
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
-import { eq as equals } from "drizzle-orm";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { userInsertSchema, users } from "@/db/schema";
@@ -10,7 +9,7 @@ import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
 import { JwtPayload } from "@/types/auth";
 import { UserRoles } from "@/types/roles";
-import { InsertUserModel, SelectUserModel } from "@/types/schemaTypes";
+import { InsertUserModel } from "@/types/schemaTypes";
 
 export const createUser = async (req: Request, res: Response) => {
   const formData: InsertUserModel = req.body;

@@ -1,16 +1,14 @@
 import { db } from "@/db";
-import bcrypt from "bcryptjs";
 import "dotenv/config";
 import { eq as equals } from "drizzle-orm";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { userInsertSchema, users } from "@/db/schema";
-import { checkExistingUser, generateSlug } from "@/utils/helpers";
+import { users } from "@/db/schema";
+import { findUserBySlug, updateUserStatus } from "@/utils/helpers";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
-import { JwtPayload } from "@/types/auth";
+import { AuthenticatedRequest } from "@/types/auth";
 import { UserRoles } from "@/types/roles";
-import { InsertUserModel, SelectUserModel } from "@/types/schemaTypes";
+import { SelectUserModel } from "@/types/schemaTypes";
 
 export const getAllUsers = async (_req: Request, res: Response) => {
   const result: SelectUserModel[] = await db.select().from(users);
@@ -32,6 +30,45 @@ export const getUser = async (req: Request, res: Response) => {
     }
 
     sendResponse(res, ResponseStatus.Success, "Success", result);
+  } catch (error) {
+    console.log(error);
+    sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
+  }
+};
+
+export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user = await findUserBySlug(req.params.slug);
+    if (!user) {
+      sendResponse(res, ResponseStatus.Success, "User not found", null, 400);
+      return;
+    }
+
+    const isOwner = req.token.slug === user.slug;
+    const isAdmin = req.token.role === UserRoles.Admin;
+    const isModerator = req.token.role === UserRoles.Moderator;
+
+    if (!(isOwner || isAdmin || isModerator)) {
+      sendResponse(
+        res,
+        ResponseStatus.Error,
+        "Forbidden: insufficient permissions",
+        null,
+        403,
+      );
+      return;
+    }
+
+    const result = await updateUserStatus(user.slug, "deactivated");
+    console.log(req.token);
+
+    sendResponse(
+      res,
+      ResponseStatus.Success,
+      "User deleted successfully",
+      result,
+    );
+    return;
   } catch (error) {
     console.log(error);
     sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);

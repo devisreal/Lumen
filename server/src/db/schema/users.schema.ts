@@ -7,6 +7,13 @@ export const userRoleEnum = t.pgEnum("user_role", [
   "moderator",
 ]);
 
+export const userStatusEnum = t.pgEnum("user_status", [
+  "active",
+  "banned",
+  "suspended",
+  "deactivated",
+]);
+
 export const users = t.pgTable(
   "users",
   {
@@ -17,10 +24,12 @@ export const users = t.pgTable(
     email: t.varchar({ length: 255 }).notNull().unique(),
     password: t.varchar("password", { length: 255 }).notNull(),
     phone: t.varchar("phone", { length: 256 }),
-    created_at: t.timestamp().defaultNow().notNull(),
-    updated_at: t.timestamp().notNull(),
     slug: t.varchar().notNull().unique(),
     role: userRoleEnum("role").notNull().default("user"),
+    status: userStatusEnum("status").notNull().default("active"),
+    created_at: t.timestamp().defaultNow().notNull(),
+    updated_at: t.timestamp().notNull(),
+    deleted_at: t.timestamp("deleted_at"),
   },
   (table) => [
     t.uniqueIndex("username_idx").on(table.userName),

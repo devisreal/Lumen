@@ -5,3 +5,4 @@ export enum UserRoles {
 }
 
 export type UserRole = keyof typeof UserRoles | `${UserRoles}`;
+export type UserStatus = "active" | "banned" | "suspended" | "deactivated";

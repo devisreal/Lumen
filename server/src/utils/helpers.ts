@@ -1,7 +1,8 @@
 import { db } from "@/db";
-import { and, eq as equals, exists } from "drizzle-orm";
+import { and, eq, eq as equals, exists } from "drizzle-orm";
 import slugify from "slugify";
 import { users } from "@/db/schema";
+import { UserStatus } from "@/types/roles";
 import { SelectUserModel } from "@/types/schemaTypes";
 
 export function generateSlug(text: string): string {
@@ -42,4 +43,20 @@ export async function findUserBySlug(
 
   const { password, ...result } = user;
   return result;
+}
+
+export async function updateUserStatus(userSlug: string, status: UserStatus) {
+  try {
+    const [result] = await db
+      .update(users)
+      .set({ status })
+      .where(eq(users.slug, userSlug))
+      .returning();
+
+    const { password, ...user } = result;
+    return user;
+  } catch (error) {
+    console.error("Failed to update user status:", error);
+    throw error;
+  }
 }
