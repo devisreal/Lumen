@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { createUser } from "@/controllers/auth.controllers";
+import { createUser, loginUser } from "@/controllers/auth.controllers";
 import authorise from "@/middlewares/auth.middleware";
 import { checkRoles } from "@/middlewares/checkRole.middleware";
 import { UserRoles } from "@/types/roles";
@@ -7,6 +7,8 @@ import { UserRoles } from "@/types/roles";
 const router: Router = express.Router();
 
 router.post("/register", createUser);
+
+router.post("/login", loginUser);
 
 router.get(
   "/validate",

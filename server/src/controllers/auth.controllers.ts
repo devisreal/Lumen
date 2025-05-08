@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
+import { eq } from "drizzle-orm";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { userInsertSchema, users } from "@/db/schema";
@@ -89,6 +90,69 @@ export const createUser = async (req: Request, res: Response) => {
         authToken: token,
       },
     );
+  } catch (error) {
+    console.log(error);
+
+    sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
+  }
+};
+
+export const loginUser = async (req: Request, res: Response) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const formData = req.body;
+  let isValidEmail = false;
+
+  if (emailRegex.test(formData.username)) {
+    isValidEmail = true;
+  }
+
+  try {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(
+        isValidEmail
+          ? eq(users.email, formData.username)
+          : eq(users.userName, formData.username),
+      );
+
+    if (!user) {
+      sendResponse(
+        res,
+        ResponseStatus.Error,
+        "Invalid email or password",
+        null,
+        403,
+      );
+      return;
+    }
+
+    const result = await bcrypt.compare(formData.password, user.password);
+    if (!result) {
+      sendResponse(
+        res,
+        ResponseStatus.Error,
+        "Username/Password combination is incorrect",
+        null,
+        403,
+      );
+      return;
+    }
+
+    const payload: JwtPayload = {
+      id: user.id,
+      email: user.email,
+      slug: user.slug,
+      role: user.role,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+      expiresIn: "8h",
+    });
+
+    sendResponse(res, ResponseStatus.Success, "Welcome back!", {
+      authToken: token,
+    });
   } catch (error) {
     console.log(error);
 
