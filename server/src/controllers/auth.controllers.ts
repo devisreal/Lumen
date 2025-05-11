@@ -127,6 +127,23 @@ export const loginUser = async (req: Request, res: Response) => {
       return;
     }
 
+    const statusMessages: Record<string, string> = {
+      banned: "Your account has been banned. Please contact support.",
+      deactivated: "Your account is deactivated. Reactivate to continue.",
+      suspended: "Your account is suspended temporarily. Try again later.",
+    };
+
+    if (user.status in statusMessages) {
+      sendResponse(
+        res,
+        ResponseStatus.Error,
+        statusMessages[user.status],
+        null,
+        403,
+      );
+      return;
+    }
+
     const result = await bcrypt.compare(formData.password, user.password);
     if (!result) {
       sendResponse(
