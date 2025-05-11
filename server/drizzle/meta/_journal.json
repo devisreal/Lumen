@@ -15,6 +15,20 @@
       "when": 1746665195780,
       "tag": "0001_chemical_franklin_richards",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1746935727131,
+      "tag": "0002_aberrant_nehzno",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1746936732932,
+      "tag": "0003_quiet_thunderbolt",
+      "breakpoints": true
     }
   ]
 }

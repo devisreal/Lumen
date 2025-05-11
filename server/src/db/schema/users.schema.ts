@@ -32,10 +32,10 @@ export const users = t.pgTable(
     deleted_at: t.timestamp("deleted_at"),
   },
   (table) => [
-    t.uniqueIndex("username_idx").on(table.userName),
-    t.uniqueIndex("slug_idx").on(table.slug),
-    t.uniqueIndex("email_idx").on(table.email),
-    t.uniqueIndex("created_idx").on(table.created_at),
+    t.uniqueIndex("user_username_idx").on(table.userName),
+    t.uniqueIndex("user_slug_idx").on(table.slug),
+    t.uniqueIndex("user_email_idx").on(table.email),
+    t.index("user_created_at_idx").on(table.created_at),
   ],
 );
 
