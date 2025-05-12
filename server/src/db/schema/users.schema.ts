@@ -27,9 +27,9 @@ export const users = t.pgTable(
     slug: t.varchar().notNull().unique(),
     role: userRoleEnum("role").notNull().default("user"),
     status: userStatusEnum("status").notNull().default("active"),
-    created_at: t.timestamp().defaultNow().notNull(),
-    updated_at: t.timestamp().notNull(),
-    deleted_at: t.timestamp("deleted_at"),
+    created_at: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updated_at: t.timestamp({ withTimezone: true }).notNull(),
+    deleted_at: t.timestamp("deleted_at", { withTimezone: true }),
   },
   (table) => [
     t.uniqueIndex("user_username_idx").on(table.userName),

@@ -11,14 +11,27 @@ import { UserRoles } from "@/types/roles";
 import { SelectUserModel } from "@/types/schemaTypes";
 
 export const getAllUsers = async (_req: Request, res: Response) => {
-  const result: SelectUserModel[] = await db.select().from(users);
+  const result = await db
+    .select({
+      id: users.id,
+      userName: users.userName,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      slug: users.slug,
+      role: users.role,
+      status: users.status,
+      createdAt: users.created_at,
+      updatedAt: users.updated_at,
+    })
+    .from(users);
   sendResponse(res, ResponseStatus.Success, "Success", result);
 };
 
 export const getUser = async (req: Request, res: Response) => {
   const slug = req.params.slug;
   try {
-    const [user] = await db
+    const [user]: SelectUserModel[] = await db
       .select()
       .from(users)
       .where(equals(users.slug, String(slug)));
@@ -60,7 +73,7 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     const result = await updateUserStatus(user.slug, "deactivated");
-    console.log(req.token);
+    
 
     sendResponse(
       res,

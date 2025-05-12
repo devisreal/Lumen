@@ -47,11 +47,23 @@ export async function findUserBySlug(
 
 export async function updateUserStatus(userSlug: string, status: UserStatus) {
   try {
-    const [result] = await db
+    const [result]: SelectUserModel[] = await db
       .update(users)
       .set({ status })
       .where(eq(users.slug, userSlug))
       .returning();
+
+    if (status === "deactivated") {
+      const now = new Date();
+
+      await db
+        .update(users)
+        .set({
+          deleted_at: now,
+          updated_at: now,
+        })
+        .where(eq(users.slug, userSlug));
+    }
 
     const { password, ...user } = result;
     return user;

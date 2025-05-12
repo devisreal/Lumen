@@ -21,15 +21,18 @@ export const posts = t.pgTable(
     coverImageUrl: t.varchar("cover_image_url", { length: 512 }),
 
     status: postStatus("status").default("draft").notNull(),
-    publishedAt: t.timestamp("published_at"),
+    publishedAt: t.timestamp("published_at", { withTimezone: true }),
 
     viewsCount: t.integer("views_count").default(0).notNull(),
     likesCount: t.integer("likes_count").default(0).notNull(),
     isFeatured: t.boolean("is_featured").default(false).notNull(),
 
-    createdAt: t.timestamp("created_at").defaultNow().notNull(),
-    updatedAt: t.timestamp("updated_at").notNull(),
-    deletedAt: t.timestamp("deleted_at"),
+    createdAt: t
+      .timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: t.timestamp("updated_at", { withTimezone: true }).notNull(),
+    deletedAt: t.timestamp("deleted_at", { withTimezone: true }),
 
     // Relations
     authorId: t.integer("author_id").references(() => users.id),

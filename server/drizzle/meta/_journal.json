@@ -29,6 +29,13 @@
       "when": 1746936732932,
       "tag": "0003_quiet_thunderbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1747007463817,
+      "tag": "0004_whole_reavers",
+      "breakpoints": true
     }
   ]
 }

@@ -30,8 +30,8 @@ export const comments = t.pgTable(
 
     status: commentStatusEnum("status").default("approved").notNull(),
 
-    createdAt: t.timestamp("created_at").defaultNow().notNull(),
-    deletedAt: t.timestamp("deleted_at"),
+    createdAt: t.timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    deletedAt: t.timestamp("deleted_at", { withTimezone: true }),
   },
   (table) => [
     t.index("comment_post_id_idx").on(table.postId),
