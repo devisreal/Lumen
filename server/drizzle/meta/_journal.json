@@ -36,6 +36,13 @@
       "when": 1747007463817,
       "tag": "0004_whole_reavers",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1747269205554,
+      "tag": "0005_first_medusa",
+      "breakpoints": true
     }
   ]
 }

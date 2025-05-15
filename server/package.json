@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "db:push": "pnpm exec drizzle-kit push",
     "db:generate": "pnpm exec drizzle-kit generate",
-    "db:migrate": "pnpm exec drizzle-kit migrate"
+    "db:migrate": "pnpm exec drizzle-kit migrate",
+    "db:seed": "tsx src/db/seeds/index.ts"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
@@ -40,6 +41,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
+    "drizzle-seed": "^0.3.1",
     "drizzle-zod": "^0.7.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

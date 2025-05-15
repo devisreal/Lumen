@@ -7,4 +7,3 @@ export const db = drizzle({
   casing: "snake_case",
   schema: schema,
 });
-1;

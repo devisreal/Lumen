@@ -1,6 +1,7 @@
 import * as t from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
+
 export const userRoleEnum = t.pgEnum("user_role", [
   "user",
   "admin",
