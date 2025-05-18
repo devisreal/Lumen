@@ -10,7 +10,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: InterVariable, sans-serif;
-  font-feature-settings: "liga" 1, "calt" 1, "salt" 1, "zero", "cv11"; /* fix for Chrome */
+  font-feature-settings:
+    "liga" 1,
+    "calt" 1,
+    "salt" 1,
+    "zero",
+    "cv11"; /* fix for Chrome */
 }
 
 @supports (font-variation-settings: normal) {

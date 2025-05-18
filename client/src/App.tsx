@@ -1,5 +1,6 @@
-import "./styles/App.css";
 import { Button } from "@mantine/core";
+
+import "./styles/App.css";
 
 function App() {
   return (
