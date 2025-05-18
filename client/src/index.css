@@ -1,8 +1,8 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
-
 @import "@mantine/core/styles.css";
+@custom-variant dark (&:where([data-mantine-color-scheme=dark], [data-mantine-color-scheme=dark] *));
 
 :root {
   font-synthesis: none;
@@ -53,6 +53,31 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1440px;
   --breakpoint-2xl: 1536px;
+
+  /* * Colours */
+  --color-butter-yellow-50: oklch(97.71% 0.04 95.84);
+  --color-butter-yellow-100: oklch(94.76% 0.08 95.21);
+  --color-butter-yellow-200: oklch(90.52% 0.15 94.47);
+  --color-butter-yellow-300: oklch(84.6% 0.17 85.57);
+  --color-butter-yellow-400: oklch(76.2% 0.16 79.62);
+  --color-butter-yellow-500: oklch(68.96% 0.15 68.76);
+  --color-butter-yellow-600: oklch(60.31% 0.15 56.96);
+  --color-butter-yellow-700: oklch(52.45% 0.14 48.07);
+  --color-butter-yellow-800: oklch(45.89% 0.13 44.72);
+  --color-butter-yellow-900: oklch(39.71% 0.1 44.51);
+  --color-butter-yellow-950: oklch(29.16% 0.08 46.21);
+
+  --color-sky-blue-50: oklch(97.41% 0.01 252.81);
+  --color-sky-blue-100: oklch(94.97% 0.02 248.05);
+  --color-sky-blue-200: oklch(90.26% 0.04 241.4);
+  --color-sky-blue-300: oklch(84.29% 0.07 240.6);
+  --color-sky-blue-400: oklch(75.31% 0.1 244.46);
+  --color-sky-blue-500: oklch(67.71% 0.13 252.06);
+  --color-sky-blue-600: oklch(59.93% 0.15 257.41);
+  --color-sky-blue-700: oklch(51.92% 0.16 260.62);
+  --color-sky-blue-800: oklch(44.91% 0.13 262.27);
+  --color-sky-blue-900: oklch(39.16% 0.1 260.64);
+  --color-sky-blue-950: oklch(28.42% 0.06 263.05);
 }
 
 /* *{
