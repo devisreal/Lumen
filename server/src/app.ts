@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
 import express, { Express, Request, Response } from "express";
@@ -13,8 +14,10 @@ app.use(express.json());
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
+    credentials: true,
   }),
 );
+app.use(cookieParser());
 
 app.get("/", async (_req: Request, res: Response) => {
   sendResponse(res, ResponseStatus.Success, "Welcome Lumen");

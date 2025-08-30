@@ -9,17 +9,18 @@ import { checkExistingUser, generateSlug } from "@/utils/helpers";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
 import { JwtPayload } from "@/types/auth";
-import { UserRoles } from "@/types/roles";
 import { InsertUserModel } from "@/types/schemaTypes";
+import { UserRoles } from "@/types/userRoles";
+import { userStatusMessages } from "@/types/userStatus";
 
 export const createUser = async (req: Request, res: Response) => {
   const formData: InsertUserModel = req.body;
-  const userSlug: string = generateSlug(formData.userName);
+  const userSlug: string = generateSlug(formData.username);
   const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
 
   try {
     const userExists = await checkExistingUser(
-      formData.userName,
+      formData.username,
       formData.email,
     );
 
@@ -55,9 +56,9 @@ export const createUser = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(formData.password, salt);
 
     const user: InsertUserModel = {
-      userName: formData.userName,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      username: formData.username,
+      firstname: formData.firstname,
+      lastname: formData.lastname,
       email: formData.email,
       password: hashedPassword,
       slug: userSlug,
@@ -72,14 +73,18 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     const payload: JwtPayload = {
-      id: insertedUser.id,
+      sub: insertedUser.id.toString(),
       email: insertedUser.email,
       slug: insertedUser.slug,
       role: insertedUser.role,
+      iss: "https://yourapi.com", // your API/service
+      aud: "https://yourfrontend.com", // the intended client
+      // iat: Math.floor(Date.now() / 1000), // issued at
+      // exp: Math.floor(Date.now() / 1000) + 15 * 60, // expire in 15 minutes
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: "8h",
+      expiresIn: "15m",
     });
 
     sendResponse(
@@ -113,31 +118,19 @@ export const loginUser = async (req: Request, res: Response) => {
       .where(
         isValidEmail
           ? eq(users.email, formData.username)
-          : eq(users.userName, formData.username),
+          : eq(users.username, formData.username),
       );
 
     if (!user) {
-      sendResponse(
-        res,
-        ResponseStatus.Error,
-        "Invalid email or password",
-        null,
-        403,
-      );
+      sendResponse(res, ResponseStatus.Error, "Invalid credentials", null, 403);
       return;
     }
 
-    const statusMessages: Record<string, string> = {
-      banned: "Your account has been banned. Please contact support.",
-      deactivated: "Your account is deactivated. Reactivate to continue.",
-      suspended: "Your account is suspended temporarily. Try again later.",
-    };
-
-    if (user.status in statusMessages) {
+    if (user.status in userStatusMessages) {
       sendResponse(
         res,
         ResponseStatus.Error,
-        statusMessages[user.status],
+        userStatusMessages[user.status],
         null,
         403,
       );
@@ -146,33 +139,41 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const result = await bcrypt.compare(formData.password, user.password);
     if (!result) {
-      sendResponse(
-        res,
-        ResponseStatus.Error,
-        "Username/Password combination is incorrect",
-        null,
-        403,
-      );
+      sendResponse(res, ResponseStatus.Error, "Invalid credentials", null, 403);
       return;
     }
 
     const payload: JwtPayload = {
-      id: user.id,
+      sub: user.id.toString(),
       email: user.email,
       slug: user.slug,
       role: user.role,
+      iss: "https://yourapi.com", // your API/service
+      aud: "https://yourfrontend.com", // the intended client
+      // iat: Math.floor(Date.now() / 1000), // issued at
+      // exp: Math.floor(Date.now() / 1000) + 15 * 60, // expire in 15 minutes
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: "8h",
+      expiresIn: "15m",
     });
 
-    sendResponse(res, ResponseStatus.Success, "Welcome back!", {
-      authToken: token,
+    const isProd = process.env.NODE_ENV === "production";
+
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 15 * 60 * 1000,
     });
+
+    sendResponse(res, ResponseStatus.Success, "Welcome back!");
+    return;
   } catch (error) {
     console.log(error);
 
     sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
+    return;
   }
 };

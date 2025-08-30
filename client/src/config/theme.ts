@@ -1,14 +1,29 @@
-import { createTheme } from "@mantine/core";
+import { Input, createTheme } from "@mantine/core";
 
 import themeClasses from "./theme.module.css";
 
 export const mantineTheme = createTheme({
+  components: {
+    Input: Input.extend({
+      classNames: {
+        input: themeClasses.input,
+      },
+    }),
+
+    InputWrapper: Input.Wrapper.extend({
+      classNames: {
+        label: themeClasses.label,
+        error: themeClasses.error,
+      },
+      defaultProps: {},
+    }),
+  },
   primaryColor: "butter-yellow",
-  primaryShade: 3,
+  primaryShade: 6,
   headings: {
     // properties for all headings
     fontWeight: "700",
-    fontFamily: "RoundoVariable",
+    fontFamily: "HostGrotesk",
   },
   autoContrast: true,
   activeClassName: themeClasses.active,

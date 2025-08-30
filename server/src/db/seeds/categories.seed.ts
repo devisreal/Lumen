@@ -1,5 +1,5 @@
+import { db } from "@/db";
 import * as schema from "@/db/schema";
-import { db } from "../index";
 
 export async function seedCategories() {
   const categories = [

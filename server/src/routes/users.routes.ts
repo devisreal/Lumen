@@ -4,20 +4,26 @@ import {
   getAllUsers,
   getUser,
 } from "@/controllers/users.controllers";
-import authorise from "@/middlewares/auth.middleware";
+import authMiddleware from "@/middlewares/auth.middleware";
 import { checkRoles } from "@/middlewares/checkRole.middleware";
-import { UserRoles } from "@/types/roles";
+import { UserRoles } from "@/types/userRoles";
 
 const router: Router = express.Router();
 
 router.get(
   "/",
-  authorise,
+  authMiddleware,
   checkRoles(UserRoles.Admin, UserRoles.Moderator),
   getAllUsers,
 );
 
 router.get("/:slug", getUser);
-router.delete("/:slug", authorise, deleteUser);
+
+router.delete(
+  "/:slug",
+  authMiddleware,
+  checkRoles(UserRoles.Admin, UserRoles.Moderator),
+  deleteUser,
+);
 
 export default router;

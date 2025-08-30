@@ -1,12 +1,11 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
-import { AuthenticatedRequest } from "@/types/auth";
-import { UserRole } from "@/types/roles";
+import { UserRole } from "@/types/userRoles";
 
 export function checkRoles(...allowedRoles: UserRole[]) {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const user = req.token;
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as any).user;
 
     if (!user) {
       sendResponse(res, ResponseStatus.Error, "Unathorized", null, 401);

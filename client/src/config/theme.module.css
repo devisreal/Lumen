@@ -1,0 +1,28 @@
+.active {
+  transition: transform 50ms ease-in-out;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.label {
+  margin-bottom: 0.2rem;
+  /* background-color: var(--color-butter-yellow-500); */
+}
+
+.input {
+  /* border: 1px solid var(--color-butter-yellow-500) !important; */
+  transition: none;
+  padding: 1.2rem 0.875rem !important;
+  /* outline: 1px; */
+
+  &:focus-within {
+    outline: 2px solid var(--color-butter-yellow-500) !important;
+    border-color: transparent;
+  }
+}
+
+.error {
+  margin-top: 3px !important;
+}

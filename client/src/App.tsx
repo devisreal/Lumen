@@ -1,43 +1,30 @@
-import { Button, Title } from "@mantine/core";
-import { Group, useMantineColorScheme } from "@mantine/core";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import AuthLayout from "./layouts/AuthLayout";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import NotFoundPage from "./pages/errors/NotFoundPage";
+import HomePage from "./pages/public/HomePage";
 import "./styles/App.css";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="font-sans p-3">
-      <h1 className="font-roundo font-semibold dark:text-white">
-        Lumen askdas Lumen Blog
-      </h1>
-      <Title order={1}>Lumen askdas Lumen Blog</Title>
-      <p>Akinoso please pass me the food</p>
-      <Button color="butter-yellow.3" variant="filled">
-        Click
-      </Button>
-      <Button color="sky-blue.6" variant="filled" className="ml-4">
-        Click
-      </Button>
-      <Button variant="gradient" className="ml-4">
-        Click
-      </Button>
+    <div className="">
+      <BrowserRouter>
+        <Routes>
+          <Route index path="/" element={<HomePage />} />
 
-      <Demo />
+          <Route path="/auth" element={<AuthLayout />}>
+            <Route index path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="*" element={<Navigate to="/not-found" replace />} />
+          </Route>
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
-}
+};
 
-function Demo() {
-  const { setColorScheme, clearColorScheme } = useMantineColorScheme({
-    keepTransitions: true,
-  });
-
-  return (
-    <Group className="mt-4">
-      <Button onClick={() => setColorScheme("light")}>Light</Button>
-      <Button onClick={() => setColorScheme("dark")}>Dark</Button>
-      <Button onClick={() => setColorScheme("auto")}>Auto</Button>
-      <Button onClick={clearColorScheme}>Clear</Button>
-    </Group>
-  );
-}
 export default App;

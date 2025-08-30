@@ -2,8 +2,8 @@ import { db } from "@/db";
 import { and, eq, eq as equals, exists } from "drizzle-orm";
 import slugify from "slugify";
 import { users } from "@/db/schema";
-import { UserStatus } from "@/types/roles";
 import { SelectUserModel } from "@/types/schemaTypes";
+import { UserStatus } from "@/types/userStatus";
 
 export function generateSlug(text: string): string {
   return (
@@ -25,7 +25,7 @@ export async function checkExistingUser(
     const result = await db
       .select()
       .from(users)
-      .where(and(equals(users.userName, username), equals(users.email, email)))
+      .where(and(equals(users.username, username), equals(users.email, email)))
       .limit(1);
     return result.length > 0;
   } catch (error) {

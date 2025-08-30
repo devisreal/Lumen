@@ -6,17 +6,16 @@ import { users } from "@/db/schema";
 import { findUserBySlug, updateUserStatus } from "@/utils/helpers";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
-import { AuthenticatedRequest } from "@/types/auth";
-import { UserRoles } from "@/types/roles";
 import { SelectUserModel } from "@/types/schemaTypes";
+import { UserRoles } from "@/types/userRoles";
 
-export const getAllUsers = async (_req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response) => {
   const result = await db
     .select({
       id: users.id,
-      userName: users.userName,
-      firstName: users.firstName,
-      lastName: users.lastName,
+      username: users.username,
+      firstname: users.firstname,
+      lastname: users.lastname,
       email: users.email,
       slug: users.slug,
       role: users.role,
@@ -25,7 +24,9 @@ export const getAllUsers = async (_req: Request, res: Response) => {
       updatedAt: users.updated_at,
     })
     .from(users);
+
   sendResponse(res, ResponseStatus.Success, "Success", result);
+  return;
 };
 
 export const getUser = async (req: Request, res: Response) => {
@@ -46,10 +47,11 @@ export const getUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
+    return;
   }
 };
 
-export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   try {
     const user = await findUserBySlug(req.params.slug);
     if (!user) {
@@ -57,9 +59,9 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
       return;
     }
 
-    const isOwner = req.token.slug === user.slug;
-    const isAdmin = req.token.role === UserRoles.Admin;
-    const isModerator = req.token.role === UserRoles.Moderator;
+    const isOwner = (req as any).user.slug === user.slug;
+    const isAdmin = (req as any).user.role === UserRoles.Admin;
+    const isModerator = (req as any).user.role === UserRoles.Moderator;
 
     if (!(isOwner || isAdmin || isModerator)) {
       sendResponse(
@@ -73,7 +75,6 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     const result = await updateUserStatus(user.slug, "deactivated");
-    
 
     sendResponse(
       res,
@@ -85,5 +86,6 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
   } catch (error) {
     console.log(error);
     sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
+    return;
   }
 };
