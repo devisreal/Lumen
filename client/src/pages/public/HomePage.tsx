@@ -1,5 +1,6 @@
-import { Button, Title } from "@mantine/core";
+import { Anchor, Button, Title } from "@mantine/core";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const HomePage: React.FC = () => {
   return (
@@ -10,9 +11,18 @@ const HomePage: React.FC = () => {
       <Button color="butter-yellow.3" variant="filled">
         Click
       </Button>
-      <Button color="sky-blue.6" variant="filled" className="ml-4">
-        Click
-      </Button>
+      <Anchor
+        style={{
+          marginLeft: "1rem",
+          color: "blue",
+        }}
+        underline="hover"
+        component={Link}
+        to="/u/profile"
+        className="ml-4"
+      >
+        Profile
+      </Anchor>
       <Button variant="gradient" className="ml-4">
         Click
       </Button>

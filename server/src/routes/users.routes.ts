@@ -6,7 +6,7 @@ import {
 } from "@/controllers/users.controllers";
 import authMiddleware from "@/middlewares/auth.middleware";
 import { checkRoles } from "@/middlewares/checkRole.middleware";
-import { UserRoles } from "@/types/userRoles";
+import { UserRoles } from "@/types/user";
 
 const router: Router = express.Router();
 

@@ -6,9 +6,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { LoginPayload } from "../../api/auth";
 import { useAuth } from "../../hooks/useAuth";
 import { loginFormSchema } from "../../lib/formSchemas";
+import { LoginPayload } from "../../types/auth";
 
 const LoginForm: React.FC = () => {
   const {

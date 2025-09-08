@@ -10,9 +10,8 @@ import { checkExistingUser, generateSlug } from "@/utils/helpers";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
 import { JwtPayload } from "@/types/auth";
-import { InsertUserModel, SelectUserModel } from "@/types/schemaTypes";
-import { UserRoles } from "@/types/userRoles";
-import { userStatusMessages } from "@/types/userStatus";
+import { InsertUserModel, SelectUserModel } from "@/types/user";
+import { UserRoles, UserStatusMessages } from "@/types/user";
 
 const isProd = config.nodeEnv === "production";
 
@@ -109,7 +108,10 @@ export const createUser: RequestHandler = async (
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const formData = req.body;
   let isValidEmail = false;
@@ -133,11 +135,11 @@ export const loginUser = async (req: Request, res: Response) => {
       return;
     }
 
-    if (user.status in userStatusMessages) {
+    if (user.status in UserStatusMessages) {
       sendResponse(
         res,
         ResponseStatus.Error,
-        userStatusMessages[user.status],
+        UserStatusMessages[user.status],
         null,
         403,
       );

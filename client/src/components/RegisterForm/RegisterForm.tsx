@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { RegisterPayload, registerUser } from "../../api/auth";
+import { registerUser } from "../../api/auth";
 import { registerFormSchema } from "../../lib/formSchemas";
+import { RegisterPayload } from "../../types/auth";
 
 const RegisterForm: React.FC = () => {
   const {

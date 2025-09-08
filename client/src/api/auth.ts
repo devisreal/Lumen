@@ -1,11 +1,7 @@
 import axios from "axios";
 
+import { LoginPayload, RegisterPayload } from "../types/auth";
 import api from "./index";
-
-export interface LoginPayload {
-  username: string;
-  password: string;
-}
 
 export const loginUser = async (payload: LoginPayload) => {
   try {
@@ -19,13 +15,6 @@ export const loginUser = async (payload: LoginPayload) => {
     }
   }
 };
-
-export interface RegisterPayload {
-  username: string;
-  email: string;
-  password?: string;
-  confirm_password: string;
-}
 
 export const registerUser = async (payload: RegisterPayload) => {
   try {

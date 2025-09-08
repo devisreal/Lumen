@@ -6,11 +6,11 @@ import { users } from "@/db/schema";
 import { findUserBySlug, updateUserStatus } from "@/utils/helpers";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
-import { SelectUserModel } from "@/types/schemaTypes";
-import { UserRoles } from "@/types/userRoles";
+import { SelectUserModel } from "@/types/user";
+import { UserRoles } from "@/types/user";
 
 export const getAllUsers: RequestHandler = async (
-  req: Request,
+  _req: Request,
   res: Response,
 ) => {
   const result = await db

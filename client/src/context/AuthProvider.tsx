@@ -1,37 +1,20 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import {
-  LoginPayload,
-  getCurrentUser,
-  loginUser,
-  logoutUser,
-} from "../api/auth";
-import { User } from "../types/User";
-
-type AuthContextType = {
-  user: User | null;
-  loading: boolean;
-  login: (payload: LoginPayload) => Promise<void>;
-  logout: () => Promise<void>;
-};
-
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
-);
+import { getCurrentUser, loginUser, logoutUser } from "../api/auth";
+import { LoginPayload } from "../types/auth";
+import { User } from "../types/user";
+import { AuthContext } from "./AuthContext";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await getCurrentUser();
-        console.log(data);
-
         setUser(data);
       } catch {
         setUser(null);
