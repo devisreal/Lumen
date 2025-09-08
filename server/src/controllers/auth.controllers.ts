@@ -2,18 +2,23 @@ import { db } from "@/db";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 import { eq } from "drizzle-orm";
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import { userInsertSchema, users } from "@/db/schema";
 import { checkExistingUser, generateSlug } from "@/utils/helpers";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
 import { JwtPayload } from "@/types/auth";
-import { InsertUserModel } from "@/types/schemaTypes";
+import { InsertUserModel, SelectUserModel } from "@/types/schemaTypes";
 import { UserRoles } from "@/types/userRoles";
 import { userStatusMessages } from "@/types/userStatus";
 
-export const createUser = async (req: Request, res: Response) => {
+const isProd = process.env.NODE_ENV === "production";
+
+export const createUser: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
   const formData: InsertUserModel = req.body;
   const userSlug: string = generateSlug(formData.username);
   const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
@@ -84,7 +89,7 @@ export const createUser = async (req: Request, res: Response) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: "15m",
+      expiresIn: "1h",
     });
 
     sendResponse(
@@ -155,17 +160,15 @@ export const loginUser = async (req: Request, res: Response) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: "15m",
+      expiresIn: "1h",
     });
-
-    const isProd = process.env.NODE_ENV === "production";
 
     res.cookie("access_token", token, {
       httpOnly: true,
       secure: isProd,
       sameSite: "strict",
       path: "/",
-      maxAge: 15 * 60 * 1000,
+      maxAge: 60 * 60 * 1000,
     });
 
     sendResponse(res, ResponseStatus.Success, "Welcome back!");
@@ -173,6 +176,75 @@ export const loginUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
 
+    sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
+    return;
+  }
+};
+
+export const logoutUser: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const token = req.cookies?.access_token;
+
+    if (!token) {
+      sendResponse(
+        res,
+        ResponseStatus.Error,
+        "No active session to log out",
+        null,
+        400,
+      );
+      return;
+    }
+    // Clear the auth cookie
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: isProd,
+      // sameSite: "lax", // adjust if frontend is on different domain
+    });
+
+    sendResponse(
+      res,
+      ResponseStatus.Success,
+      "Logged out successfully",
+      null,
+      200,
+    );
+    return;
+  } catch (error) {
+    console.error("Logout error:", error);
+    sendResponse(
+      res,
+      ResponseStatus.Error,
+      "Something went wrong while logging out",
+      500,
+    );
+    return;
+  }
+};
+
+export const getMyDetails: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  const slug = (req as any).user.slug;
+  try {
+    const [user]: SelectUserModel[] = await db
+      .select()
+      .from(users)
+      .where(eq(users.slug, String(slug)));
+
+    const { password, ...result } = user;
+
+    if (!result) {
+      sendResponse(res, ResponseStatus.Error, "User not found", null, 400);
+    }
+
+    sendResponse(res, ResponseStatus.Success, "Success", result);
+  } catch (error) {
+    console.log(error);
     sendResponse(res, ResponseStatus.Error, "An error occured", error, 500);
     return;
   }

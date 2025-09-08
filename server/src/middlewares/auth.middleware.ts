@@ -1,12 +1,16 @@
 import "dotenv/config";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware: RequestHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   let token = req.cookies?.access_token as string | undefined;
 
   if (!token && req.headers.authorization) {

@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { sendResponse } from "@/utils/sendResponse";
 import { ResponseStatus } from "@/types/apiResponse";
 import { UserRole } from "@/types/userRoles";
 
-export function checkRoles(...allowedRoles: UserRole[]) {
+export function checkRoles(...allowedRoles: UserRole[]): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = (req as any).user;
 

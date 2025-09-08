@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import "dotenv/config";
 import { eq as equals } from "drizzle-orm";
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { users } from "@/db/schema";
 import { findUserBySlug, updateUserStatus } from "@/utils/helpers";
 import { sendResponse } from "@/utils/sendResponse";
@@ -9,7 +9,10 @@ import { ResponseStatus } from "@/types/apiResponse";
 import { SelectUserModel } from "@/types/schemaTypes";
 import { UserRoles } from "@/types/userRoles";
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
   const result = await db
     .select({
       id: users.id,
@@ -29,7 +32,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
   return;
 };
 
-export const getUser = async (req: Request, res: Response) => {
+export const getUser: RequestHandler = async (req: Request, res: Response) => {
   const slug = req.params.slug;
   try {
     const [user]: SelectUserModel[] = await db
@@ -51,7 +54,10 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const user = await findUserBySlug(req.params.slug);
     if (!user) {

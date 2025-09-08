@@ -36,7 +36,6 @@ const RegisterForm: React.FC = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
-        console.log(formValues);
         console.error(error.response.data.message);
       } else {
         toast.error("An unexpected error occurred.");
