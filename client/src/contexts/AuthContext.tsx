@@ -1,14 +1,19 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useEffect, useState } from "react";
 
-import { getCurrentUser } from "../api/auth";
+import {
+  LoginPayload,
+  getCurrentUser,
+  loginUser,
+  logoutUser,
+} from "../api/auth";
 import { User } from "../types/User";
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
-  login?: (username: string, password: string) => Promise<void>;
-  logout?: () => Promise<void>;
+  login: (payload: LoginPayload) => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -36,8 +41,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     })();
   }, []);
 
+  const login = async (payload: LoginPayload) => {
+    await loginUser(payload);
+    const userData = await getCurrentUser();
+    setUser(userData);
+  };
+
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -6,7 +6,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { LoginPayload, loginUser } from "../../api/auth";
+import { LoginPayload } from "../../api/auth";
+import { useAuth } from "../../hooks/useAuth";
 import { loginFormSchema } from "../../lib/formSchemas";
 
 const LoginForm: React.FC = () => {
@@ -25,11 +26,12 @@ const LoginForm: React.FC = () => {
   });
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (formValues: LoginPayload) => {
     try {
-      const data = await loginUser(formValues);
-      toast.success(data.message);
+      await login(formValues);
+      toast.success("Logged in successfully!");
       reset();
       navigate("/");
     } catch (error: unknown) {

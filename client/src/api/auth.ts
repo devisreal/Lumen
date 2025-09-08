@@ -7,7 +7,7 @@ export interface LoginPayload {
   password: string;
 }
 
-export const loginUser = async (payload: LoginPayload): Promise<void> => {
+export const loginUser = async (payload: LoginPayload) => {
   try {
     const { data } = await api.post("/auth/login", payload);
     return data;

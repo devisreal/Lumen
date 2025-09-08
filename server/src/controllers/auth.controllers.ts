@@ -1,3 +1,4 @@
+import config from "@/config/config";
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
@@ -13,7 +14,7 @@ import { InsertUserModel, SelectUserModel } from "@/types/schemaTypes";
 import { UserRoles } from "@/types/userRoles";
 import { userStatusMessages } from "@/types/userStatus";
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd = config.nodeEnv === "production";
 
 export const createUser: RequestHandler = async (
   req: Request,
@@ -92,14 +93,15 @@ export const createUser: RequestHandler = async (
       expiresIn: "1h",
     });
 
-    sendResponse(
-      res,
-      ResponseStatus.Success,
-      "Account created successfully!, login to continue",
-      {
-        authToken: token,
-      },
-    );
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 1000,
+    });
+
+    sendResponse(res, ResponseStatus.Success, "Account created successfully!,");
   } catch (error) {
     console.log(error);
 

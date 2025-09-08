@@ -2,17 +2,16 @@ import { Button } from "@mantine/core";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { logoutUser } from "../../api/auth";
 import { useAuth } from "../../hooks/useAuth";
 
 const UserProfile: React.FC = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   if (loading) return <p>Loading</p>;
 
   const handleLogout = async () => {
-    await logoutUser();
+    await logout();
     navigate("/auth/login");
     toast.success("Logout successful");
   };
